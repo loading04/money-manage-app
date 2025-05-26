@@ -1,6 +1,7 @@
 
 import { Tabs } from 'expo-router'
 import { ChartColumnIncreasing, House, Settings, Wallet } from 'lucide-react-native'
+import { COLORS } from '../constants/theme'
 export default function TabLayout(){
 
     return (
@@ -8,6 +9,7 @@ export default function TabLayout(){
       screenOptions={{
         headerShown:false,
         tabBarShowLabel:false,
+        tabBarActiveTintColor:COLORS.clicked,
         
 
       }}>
@@ -15,7 +17,7 @@ export default function TabLayout(){
         name='index'
         options={{
           headerShown:false,
-          tabBarIcon:()=> <House />,
+          tabBarIcon:({ focused, color, size })=> <House color={color} />,
         }}
         />
 
@@ -23,7 +25,7 @@ export default function TabLayout(){
         name='transactions'
         options={{
           headerShown:false,
-          tabBarIcon:()=> <Wallet  />,
+          tabBarIcon:({ focused, color, size })=> <Wallet  color={color}/>,
 
         }}
         />
@@ -32,7 +34,7 @@ export default function TabLayout(){
         name='budgets'
         options={{
           headerShown:false,
-          tabBarIcon:()=> <ChartColumnIncreasing   />,
+          tabBarIcon:({ focused, color, size })=> <ChartColumnIncreasing color={color}/>,
         }}
         />
 
@@ -40,7 +42,7 @@ export default function TabLayout(){
         name='settings'
         options={{
           headerShown:false,
-          tabBarIcon:()=> <Settings   />,
+          tabBarIcon:({ focused, color, size })=> <Settings color={color}/>,
         }}
         />
       </Tabs>
