@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { TrendingDown, TrendingUp, Wallet } from "lucide-react-native";
+import { PiggyBank, TrendingDown, TrendingUp, Wallet } from "lucide-react-native";
 import { Text, View } from "react-native";
 import { COLORS } from '../constants/theme';
 export default function Index() {
@@ -102,7 +102,7 @@ export default function Index() {
         >
           <HStack className="items-center space-x-4">
             <View className="bg-purple-200 rounded-full w-10 h-10 flex items-center justify-center">
-              <TrendingDown className="h-5 w-5" color={COLORS.purple} />
+              <PiggyBank className="h-5 w-5" color={COLORS.purple} />
             </View>
 
             <VStack>
