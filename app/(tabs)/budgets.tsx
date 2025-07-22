@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Dimensions, Text, View } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
+import { Bar } from 'react-native-progress';
 export default function Budgets() {
     const chartData = [
         { name: 'Housing', amount: 1000, color: '#3B82F6', legendFontColor: '#000', legendFontSize: 12 },
@@ -56,6 +57,37 @@ export default function Budgets() {
                     </View>
                 </View>
             </Card>
+
+
+            <View className="bg-white p-4 rounded-xl shadow border border-gray-200 my-3 m-4">
+                {/* Header */}
+                <View className="flex-row justify-between items-center mb-2">
+                    <Text className="text-lg font-semibold text-gray-900">Housing</Text>
+                    <Text className="text-sm font-semibold text-red-600">96%</Text>
+                </View>
+
+                {/* Progress Bar */}
+                <Bar
+                    progress={0.96}
+                    width={null}
+                    color="#EF4444"
+                    unfilledColor="#E5E7EB"
+                    borderWidth={0}
+                    height={10}
+                    borderRadius={5}
+                    style={{ marginBottom: 10 }}
+                />
+
+                {/* Spent and Remaining */}
+                <View className="flex-row justify-between mb-1">
+                    <Text className="text-sm font-medium text-gray-900">$1,150.00 spent</Text>
+                    <Text className="text-sm font-medium text-blue-600">$50.00 remaining</Text>
+                </View>
+
+                {/* Budget Info */}
+                <Text className="text-xs text-gray-500">Budget: $1,200.00</Text>
+            </View>
+
         </View>
     );
 }

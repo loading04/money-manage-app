@@ -10,7 +10,7 @@ export default function Index() {
   return (
     <View className="bg-white-300 mt-4">
       {/* Total Balance Card */}
-      <Card size="md" variant="outline" className="mb-4 m-4 shadow-sm bg-white">
+      <Card size="md" variant="outline" className="mb-4 m-4  bg-white">
         <Heading size="md" className="mb-1 pt-4 pl-4 text-2xl font-semibold" >
           Total Balance
         </Heading>
@@ -25,7 +25,7 @@ export default function Index() {
         <Card
           size="sm"
           variant="outline"
-          className="flex-1  mr-2 ml-2 shadow-sm bg-white"
+          className="flex-1  mr-2 ml-2 bg-white"
         >
           <HStack className="items-center space-x-4">
             <View className="bg-green-200 rounded-full w-10 h-10 flex items-center justify-center">
@@ -47,7 +47,7 @@ export default function Index() {
         <Card
           size="md"
           variant="outline"
-          className="flex-1  mr-2 shadow-sm bg-white"
+          className="flex-1  mr-2  bg-white"
         >
           <HStack className="items-center space-x-4">
             <View className="bg-red-200 rounded-full w-10 h-10 flex items-center justify-center">
@@ -76,7 +76,7 @@ export default function Index() {
         <Card
           size="sm"
           variant="outline"
-          className="flex-1  mr-2 ml-2 shadow-sm bg-white"
+          className="flex-1  mr-2 ml-2   bg-white"
         >
           <HStack className="items-center space-x-4">
             <View className="bg-blue-200 rounded-full w-10 h-10 flex items-center justify-center">
@@ -98,7 +98,7 @@ export default function Index() {
         <Card
           size="md"
           variant="outline"
-          className="flex-1  mr-2 shadow-sm bg-white"
+          className="flex-1  mr-2   bg-white"
         >
           <HStack className="items-center space-x-4">
             <View className="bg-purple-200 rounded-full w-10 h-10 flex items-center justify-center">
