@@ -32,8 +32,9 @@ export default function Budgets() {
     }));
 
     return (
-        <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-            <View className="bg-white-300 mt-4">
+        <View className="flex-1 p-4 bg-white">
+        <ScrollView >
+            
                 <Card size="md" variant="outline" className="mb-4 m-4 shadow-sm bg-white">
                     <Text className="text-xl font-semibold mb-5">Budget Overview</Text>
 
@@ -114,7 +115,8 @@ export default function Budgets() {
                         </View>
                     );
                 })}
+            </ScrollView>
             </View>
-        </ScrollView>
+        
     );
 }

@@ -8,6 +8,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Platform,
 } from "react-native";
 import {
     Category,
@@ -19,15 +20,26 @@ import {
     subtractFromRemainingBudget,
     updateTransaction,
 } from "../db"; // adjust your db import if needed
-
+import DateTimePicker from '@react-native-community/datetimepicker';
 export default function Transactions() {
+
+    const formatDate = (d: Date) => {
+        const day = d.getDate().toString().padStart(2, "0");
+        const month = (d.getMonth() + 1).toString().padStart(2, "0");
+        const year = d.getFullYear();
+        return `${day}-${month}-${year}`;
+    };
+    const today = new Date();
+    const [date, setDate] = useState(formatDate(today)); // show today by default
+    const [showPicker, setShowPicker] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(today); // holds actual Date object
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
 
     const [name, setName] = useState("");
     const [amount, setAmount] = useState("");
-    const [date, setDate] = useState("");
+    
     const [categoryId, setCategoryId] = useState<number | null>(null);
 
     const [editMode, setEditMode] = useState(false);
@@ -68,12 +80,10 @@ export default function Transactions() {
             await updateTransaction(editingId, name, parsedAmount, categoryId, date);
         } else {
             await insertTransaction(name, parsedAmount, categoryId, date);
-            if (parsedAmount < 0) {
-                await subtractFromRemainingBudget(categoryId, parsedAmount);
-            } else {
-                // Add positive amount to both budget and remaining
+            if (parsedAmount ) {
                 await subtractFromRemainingBudget(categoryId, parsedAmount);
             }
+
         }
         resetForm();
         setModalVisible(false);
@@ -81,7 +91,7 @@ export default function Transactions() {
     };
     
 
-    const handleEdit = (tx: Transaction) => {
+    const handleEdit = async (tx: Transaction) => {
         setName(tx.name);
         setAmount(String(tx.amount));
         setDate(tx.date);
@@ -89,6 +99,8 @@ export default function Transactions() {
         setEditingId(tx.id);
         setEditMode(true);
         setModalVisible(true);
+
+        await updateTransaction(tx.id,tx.name,tx.amount,tx.categoryId,tx.date);
     };
 
     const handleDelete = async (id: number) => {
@@ -97,12 +109,12 @@ export default function Transactions() {
     };
 
     return (
-        <View className="bg-white mt-4 flex-1">
+        <View className="bg-white flex-1">
             <Card size="md" variant="outline" className="mb-4 m-4 shadow-sm bg-white">
-                <View className="flex-row justify-between items-center px-4 py-2 mb-5">
+                <View className="justify-between  px-4 py-2 mb-5">
                     <Text className="text-2xl font-semibold">Recent Transactions</Text>
                     <TouchableOpacity
-                        className="bg-blue-400 rounded-md px-3 py-1"
+                        className="bg-blue-500 rounded-xl p-3 mb-2"
                         onPress={() => {
                             resetForm();
                             setModalVisible(true);
@@ -173,12 +185,30 @@ export default function Transactions() {
                             onChangeText={setAmount}
                             className="border border-gray-300 p-2 rounded mb-3"
                         />
-                        <TextInput
-                            placeholder="Date (YYYY-MM-DD)"
-                            value={date}
-                            onChangeText={setDate}
+                        <TouchableOpacity
+                            onPress={() => setShowPicker(true)}
                             className="border border-gray-300 p-2 rounded mb-3"
-                        />
+                        >
+                            <Text className="text-gray-800">
+                                {date ? date : "Select Date (DD-MM-YYYY)"}
+                            </Text>
+                        </TouchableOpacity>
+
+                        {showPicker && (
+                            <DateTimePicker
+                                value={selectedDate}
+                                mode="date"
+                                display="spinner"
+                                onChange={(event, chosenDate) => {
+                                    if (chosenDate) {
+                                        setSelectedDate(chosenDate);
+                                        setDate(formatDate(chosenDate));
+                                    }
+                                    setShowPicker(false);
+                                }}
+                            />
+                        )}
+                    
 
                         {/* Categories dropdown */}
                         <ScrollView className="max-h-40 mb-3 border border-gray-300 rounded">

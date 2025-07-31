@@ -154,26 +154,83 @@ export const getAllTransactions = async (): Promise<Transaction[]> => {
 
 export const deleteTransaction = async (id: number) => {
     if (!db) return;
-    await db.runAsync('DELETE FROM transactions WHERE id = ?', id);
+
+    try {
+        // 1. Get the transaction details before deletion
+        const transaction = await db.getFirstAsync(
+            "SELECT amount, categoryId FROM transactions WHERE id = ?",
+            id
+        );
+
+        if (!transaction) return;
+
+        const { amount, categoryId } = transaction;
+
+        // 2. Reverse its effect on remainingBudget
+        await db.runAsync(
+            "UPDATE categories SET remainingBudget = remainingBudget - ? WHERE id = ?",
+            amount,
+            categoryId
+        );
+
+        // 3. Delete the transaction
+        await db.runAsync('DELETE FROM transactions WHERE id = ?', id);
+
+    } catch (error) {
+        console.error("Error deleting transaction and updating remainingBudget:", error);
+    }
 };
 
 export const updateTransaction = async (
     id: number,
     name: string,
-    amount: number,
-    categoryId: number,
+    newAmount: number,
+    newCategoryId: number,
     date: string
 ) => {
     if (!db) return;
-    await db.runAsync(
-        'UPDATE transactions SET name = ?, amount = ?, categoryId = ?, date = ? WHERE id = ?',
-        name,
-        amount,
-        categoryId,
-        date,
-        id
-    );
+
+    try {
+        // 1. Get the old transaction (its amount and category)
+        const oldTransaction = await db.getFirstAsync(
+            "SELECT amount, categoryId FROM transactions WHERE id = ?",
+            id
+        );
+
+        if (!oldTransaction) return;
+
+        const oldAmount = oldTransaction.amount;
+        const oldCategoryId = oldTransaction.categoryId;
+
+        // 2. Reverse the old amount
+        await db.runAsync(
+            "UPDATE categories SET remainingBudget = remainingBudget - ? WHERE id = ?",
+            oldAmount,
+            oldCategoryId
+        );
+
+        // 3. Apply the new amount
+        await db.runAsync(
+            "UPDATE categories SET remainingBudget = remainingBudget + ? WHERE id = ?",
+            newAmount,
+            newCategoryId
+        );
+
+        // 4. Update the transaction itself
+        await db.runAsync(
+            'UPDATE transactions SET name = ?, amount = ?, categoryId = ?, date = ? WHERE id = ?',
+            name,
+            newAmount,
+            newCategoryId,
+            date,
+            id
+        );
+
+    } catch (error) {
+        console.error("Error updating transaction and adjusting remainingBudget:", error);
+    }
 };
+
 
 export const subtractFromRemainingBudget = async (id: number, amount: number) => {
     if (!db) return;
